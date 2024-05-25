@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class M_BaseMonster : MonoBehaviour
@@ -7,13 +8,33 @@ public class M_BaseMonster : MonoBehaviour
 
     [Header("State Manager")]
     [SerializeField] public CharacterStateId currentStateId = CharacterStateId.NONE;
+    [SerializeField] public CharacterStateId initialStateId = CharacterStateId.NONE;
 
     [Header("Animator")]
     [SerializeField] public Animator modelAnimator;
 
-    public void SwitchControlState(CharacterStateId nextStateId, bool isOverride = false) 
+    [Header("Combat")]
+    [SerializeField] public M_AttackController attackController;
+    [SerializeField] public M_BaseHealth healthController;
+
+    private bool isUpdateActive = false;
+    private bool isFixedUpdateActive = false;
+        
+    private void Start() {
+        StartCoroutine(SwitchControlState(initialStateId));
+
+        // reset all state in this object
+        SetUpdateProcess(false);
+
+        // initialize all
+        healthController.Initialize();
+    }
+
+    public IEnumerator SwitchControlState(CharacterStateId nextStateId, bool isOverride = false) 
     {
-        if (nextStateId == currentStateId && !isOverride) { return; }
+        yield return null;
+
+        if (nextStateId == currentStateId && !isOverride) { yield break; }
 
         onExitState();
 
@@ -22,10 +43,50 @@ public class M_BaseMonster : MonoBehaviour
         onEnterState();
     }
 
+    private void Update()
+    {
+        if (!isUpdateActive) return;
+
+        switch (currentStateId)
+        {
+            case CharacterStateId.IDLE:       
+                attackController.CheckEnemy(factionId);
+                break;
+            case CharacterStateId.ATTACK:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (!isFixedUpdateActive) return;
+
+        switch (currentStateId)
+        {
+            case CharacterStateId.IDLE:
+                break;
+            case CharacterStateId.ATTACK:
+                break;
+            default:
+                break;
+        }
+    }
+
     private void onEnterState()
     {
         switch (currentStateId)
         {
+            case CharacterStateId.IDLE:
+                PlayAnimation("RunFWD");
+
+                // turn on/off update
+                isUpdateActive = true;
+
+                break;
+            case CharacterStateId.ATTACK:
+                break;
             default:
                 break;
         }
@@ -33,10 +94,28 @@ public class M_BaseMonster : MonoBehaviour
 
     private void onExitState() {
         switch (currentStateId) {
+            case CharacterStateId.IDLE:
+
+                // turn on/off update
+                isUpdateActive = false;
+
+                break;
+            case CharacterStateId.ATTACK:
+                break;
             default:
                 break;
         }
     }
+
+    private void SetUpdateProcess(bool isActivated) {
+        isUpdateActive = isActivated;
+        isFixedUpdateActive = isActivated;
+    }
+
+    public void PlayAnimation(string animationName) {
+        modelAnimator.Play(animationName);
+    }
+
 
     public MonsterId GetMonsterId() 
     {

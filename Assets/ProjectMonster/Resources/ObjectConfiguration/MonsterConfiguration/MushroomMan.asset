@@ -17,8 +17,8 @@ MonoBehaviour:
     id: 1
     name: Mushroom Man
     description: A Wild Mushroom Man
-    deploy_cost: 100
-    is_moveable: 0
-    is_melee: 0
-  monster_model: {fileID: 3321063732985649187, guid: bdb40addcaa0fd049b38263845fb92dd,
+    deployCost: 100
+    isMoveable: 0
+    isMelee: 0
+  monsterModel: {fileID: 3321063732985649187, guid: bdb40addcaa0fd049b38263845fb92dd,
     type: 3}

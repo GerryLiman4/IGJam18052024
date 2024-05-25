@@ -11,16 +11,25 @@ public class M_GridMap : MonoBehaviour
 	[SerializeField]
 	private Vector2 cellSize;
 
+	[SerializeField]
+	private GameObject tilePrefab;
+
 	public Dictionary<Vector2Int, M_Grid> gridMap;
+	public Dictionary<Vector2Int, GameObject> gridTileMap;
 
 	private void Start()
 	{
 		gridMap = new Dictionary<Vector2Int, M_Grid>();
+		gridTileMap = new Dictionary<Vector2Int, GameObject>();
 		for (int i = 0; i < gridSize.x; i++)
 		{
 			for (int j = 0; j < gridSize.y; j++)
 			{
-				gridMap.Add(new Vector2Int(i, j), new M_Grid(new Vector2Int(i, j)));
+				Vector2Int pos = new Vector2Int(i, j);
+				gridMap.Add(pos, new M_Grid(pos));
+				
+				GameObject tile = Instantiate(tilePrefab, GetGridWorldPosition(pos), Quaternion.identity);
+				gridTileMap.Add(pos, tile);
 			}
 		}
 	}
@@ -28,7 +37,7 @@ public class M_GridMap : MonoBehaviour
 	public Vector3 GetGridWorldPosition(Vector2Int gridPos)
 	{
 		Vector3 startPos = transform.position;
-		return startPos + new Vector3(gridPos.x * cellSize.x, 0, gridPos.x * cellSize.y);
+		return startPos + new Vector3(gridPos.x * cellSize.x, 0, gridPos.y * cellSize.y);
 	}
 
 	public M_Grid GetGrid(Vector2Int gridPos)

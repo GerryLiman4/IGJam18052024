@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSize: {x: 20, y: 5}
   cellSize: {x: 5, y: 5}
-  tilePrefab: {fileID: 9129388654335154635, guid: d8e3cd3d09c0d7844976a58d7f7be137,
+  tilePrefab: {fileID: 2925584609607896570, guid: d8e3cd3d09c0d7844976a58d7f7be137,
     type: 3}

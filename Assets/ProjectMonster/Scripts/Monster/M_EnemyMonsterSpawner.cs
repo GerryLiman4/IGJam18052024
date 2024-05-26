@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class M_EnemyMonsterSpawner : MonoBehaviour
@@ -6,6 +7,9 @@ public class M_EnemyMonsterSpawner : MonoBehaviour
 	public M_EnemySpawnerConfiguration defaultConfig;
 
 	private M_EnemySpawnerConfiguration currentConfig;
+
+	[SerializeField]
+	List<M_MonsterIdWithMonsterObject> monsterIdReference;
 
 	private M_EnemyWave currentWave;
 
@@ -20,6 +24,8 @@ public class M_EnemyMonsterSpawner : MonoBehaviour
 	private bool currentWaveMaxProgression = false;
 
 	private int currentMonster = 0;
+
+
 
 	// Start is called before the first frame update
 	void Start()
@@ -63,14 +69,36 @@ public class M_EnemyMonsterSpawner : MonoBehaviour
 		}
 
 		SpawnMonster();
+		CheckCurrentWaveMonsterDead();
+	}
+
+	private void CheckCurrentWaveMonsterDead()
+	{
+		// check all enemy dead count is equal to monster in wave
 	}
 
 	private void SpawnMonster()
 	{
+		if (currentMonster > currentWave.waveProgressionMonsterList.Count - 1) return;
+
 		MonsterId t = currentWave.GetMonster(currentWaveProgression, currentMonster);
 		if (t != MonsterId.NONE)
 		{
-			Debug.Log(t);
+			GameObject s = null;
+			for (int i = 0; i < monsterIdReference.Count; i++)
+			{
+				if (monsterIdReference[i].monsterId == t)
+				{
+					s = monsterIdReference[i].monsterObj;
+					break;
+				}
+			}
+
+			int x = M_GridMap.Instance.GridSize.x - 1;
+			int y = Random.Range(0, M_GridMap.Instance.GridSize.y);
+
+			M_GridMap.Instance.SpawnEnemy(s, new Vector2Int(x, y));
+
 			currentMonster += 1;
 		}
 

@@ -10,6 +10,7 @@ public class M_MonsterInformation
     [SerializeField] public int deployCost = 0;
 
     [SerializeField] public bool isMoveable = false;
+    [SerializeField] public float moveSpeed = 4f;
     [SerializeField] public bool isMelee = false;
 
     public M_MonsterInformation() { }

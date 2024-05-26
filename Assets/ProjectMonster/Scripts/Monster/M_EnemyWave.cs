@@ -13,8 +13,6 @@ public class M_EnemyWave
 	[SerializeField]
 	public List<M_WaveProgressionMonster> waveProgressionMonsterList;
 
-	public int enemyCount = 0;
-
 	public MonsterId GetMonster(float waveProgression, int currentMonsterIdx)
 	{
 		for (int i = currentMonsterIdx; i < waveProgressionMonsterList.Count; i++)

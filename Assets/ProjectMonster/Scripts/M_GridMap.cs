@@ -18,11 +18,22 @@ public class M_GridMap : MonoBehaviour
 	public Dictionary<Vector2Int, M_Grid> gridMap;
 	public Dictionary<Vector2Int, M_GridTile> gridTileMap;
 
+	public Vector2Int GridSize { get { return gridSize; } }
 
 	private Vector2Int currentHoveredGrid = new Vector2Int(-1, -1);
 
+	private Vector3 spawnOffset;
+
+	public static M_GridMap Instance;
+
+	private void Awake()
+	{
+		Instance = this;
+		
+	}
 	private void Start()
 	{
+		spawnOffset = new Vector3(cellSize.x / -2, 0, cellSize.y / -2);
 		gridMap = new Dictionary<Vector2Int, M_Grid>();
 		gridTileMap = new Dictionary<Vector2Int, M_GridTile>();
 		for (int i = 0; i < gridSize.x; i++)
@@ -68,6 +79,16 @@ public class M_GridMap : MonoBehaviour
 		GetGrid(gridPos).gridObject = gridObject;
 	}
 
+	public void SpawnEnemy(GameObject gameObject, Vector2Int gridPos)
+	{
+		Instantiate(gameObject, GetGridWorldPosition(gridPos) + spawnOffset, Quaternion.Euler(new Vector3(0, -90, 0)), transform);
+	}
+
+	public void SpawnAlly(GameObject gameObject, Vector2Int gridPos)
+	{
+		Instantiate(gameObject, GetGridWorldPosition(gridPos) + spawnOffset, Quaternion.Euler(new Vector3(0, 90, 0)), transform);
+	}
+
 	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.white;
@@ -102,5 +123,4 @@ public class M_GridMap : MonoBehaviour
 		gridTileMap[currentHoveredGrid].SetNormal();
 		currentHoveredGrid = new Vector2Int(-1, -1);
 	}
-
 }

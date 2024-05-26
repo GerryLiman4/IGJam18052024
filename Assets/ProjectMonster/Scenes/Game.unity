@@ -381,6 +381,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultConfig: {fileID: 11400000, guid: 578bf00e2251b6346bf625efb0946e98, type: 2}
+  monsterIdReference:
+  - monsterId: 1
+    monsterObj: {fileID: 1916780382487237466, guid: bdb40addcaa0fd049b38263845fb92dd,
+      type: 3}
+  - monsterId: 2
+    monsterObj: {fileID: 1889710934727968257, guid: aba0490f08f74e7459ccf4cfaea1880c,
+      type: 3}
 --- !u!4 &915063504
 Transform:
   m_ObjectHideFlags: 0

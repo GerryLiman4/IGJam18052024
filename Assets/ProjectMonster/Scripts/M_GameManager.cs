@@ -31,6 +31,11 @@ public class M_GameManager : MonoBehaviour
 		time += Time.deltaTime;
 		CheckPreparationTime();
 
+		if (Input.GetKey(KeyCode.Z))
+		{
+			ChangeGameState(M_GameStateId.GAMEOVER);
+		}
+
 	}
 
 	private void CheckPreparationTime()

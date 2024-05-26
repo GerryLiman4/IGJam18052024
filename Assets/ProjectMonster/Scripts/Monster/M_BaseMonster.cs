@@ -11,6 +11,8 @@ public class M_BaseMonster : MonoBehaviour
     [SerializeField] public CharacterStateId currentStateId = CharacterStateId.NONE;
     [SerializeField] public CharacterStateId initialStateId = CharacterStateId.NONE;
 
+    public M_CharacterMoveStateId movementState = M_CharacterMoveStateId.Idle;
+
     [Header("Animator")]
     [SerializeField] public Animator modelAnimator;
 
@@ -79,7 +81,13 @@ public class M_BaseMonster : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isFixedUpdateActive) return;
+		//switch characterMoveStateId
+		if (movementState == M_CharacterMoveStateId.Moving)
+		{
+			transform.position += transform.forward * configuration.information.moveSpeed * Time.fixedDeltaTime;
+		}
+
+		if (!isFixedUpdateActive) return;
 
         switch (currentStateId)
         {
@@ -90,6 +98,8 @@ public class M_BaseMonster : MonoBehaviour
             default:
                 break;
         }
+
+        
     }
 
     private void onEnterState()
@@ -102,10 +112,15 @@ public class M_BaseMonster : MonoBehaviour
                 // turn on/off update
                 isUpdateActive = true;
 
-                break;
+				if (configuration.information.isMoveable)
+				{
+					ChangeMovementState(M_CharacterMoveStateId.Moving);
+				}
+				break;
             case CharacterStateId.ATTACK:
                 animationFinished += onAttackAnimationFinished;
                 PlayAnimation(AnimationId.Attack01.ToString());
+                ChangeMovementState(M_CharacterMoveStateId.Idle);
                 break;
             default:
                 break;
@@ -145,5 +160,10 @@ public class M_BaseMonster : MonoBehaviour
     private void onAttackAnimationFinished(string animationName)
     {
         StartCoroutine(SwitchControlState(CharacterStateId.IDLE));
+    }
+
+    private void ChangeMovementState(M_CharacterMoveStateId state)
+    {
+        movementState = state;
     }
 }

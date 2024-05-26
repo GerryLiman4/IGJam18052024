@@ -17,7 +17,7 @@ public class M_EnemyWave
 	{
 		for (int i = currentMonsterIdx; i < waveProgressionMonsterList.Count; i++)
 		{
-			if (waveProgression >= waveProgressionMonsterList[i].waveProgression)
+			if (waveProgression >= waveProgressionMonsterList[i].waveTargetProgression)
 			{
 				int random = Random.Range(0, waveProgressionMonsterList[i].monsterIds.Count);
 				return waveProgressionMonsterList[i].monsterIds[random];

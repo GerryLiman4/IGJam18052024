@@ -6,7 +6,7 @@ using UnityEngine;
 public class M_WaveProgressionMonster
 {
     [SerializeField]
-    public int waveProgression = 0;
+    public int waveTargetProgression = 0;
 
     [SerializeField]
     public List<MonsterId> monsterIds = new List<MonsterId>();

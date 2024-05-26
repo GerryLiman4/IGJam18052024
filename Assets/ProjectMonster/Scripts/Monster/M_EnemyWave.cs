@@ -13,13 +13,11 @@ public class M_EnemyWave
 	[SerializeField]
 	public List<M_WaveProgressionMonster> waveProgressionMonsterList;
 
-	public int enemyCount = 0;
-
 	public MonsterId GetMonster(float waveProgression, int currentMonsterIdx)
 	{
 		for (int i = currentMonsterIdx; i < waveProgressionMonsterList.Count; i++)
 		{
-			if (waveProgression >= waveProgressionMonsterList[i].waveTargetProgression)
+			if (waveProgression >= waveProgressionMonsterList[i].waveProgression)
 			{
 				int random = Random.Range(0, waveProgressionMonsterList[i].monsterIds.Count);
 				return waveProgressionMonsterList[i].monsterIds[random];

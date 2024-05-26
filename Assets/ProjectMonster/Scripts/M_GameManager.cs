@@ -12,6 +12,10 @@ public class M_GameManager : MonoBehaviour
 	[SerializeField]
 	public float preparationTime = 5f;
 
+	[Header("Managers")]
+	[SerializeField] private M_SlotControllerUI slotManager;
+	[SerializeField] private List<M_MonsterConfiguration> availableMonsters = new List<M_MonsterConfiguration>();
+
 	public M_GameStateId GameState { get; private set; } = M_GameStateId.PREPARATION;
 
 	private float time = 0f;
@@ -25,8 +29,20 @@ public class M_GameManager : MonoBehaviour
 		Instance = this;
 	}
 
+    private void Start()
+    {
+		// initialize every manager
+		slotManager.Initialize(availableMonsters);
+		slotManager.selected += onSelectedCard;
+	}
 
-	private void Update()
+    private void onSelectedCard(M_CardSlotUI selectedCard)
+    {
+		print("Selected "+ selectedCard.configuration.information.name);
+        // ini nanti ada input manager dan di input manager ngedetect tile yang akan diletakin 
+    }
+
+    private void Update()
 	{
 		time += Time.deltaTime;
 		CheckPreparationTime();

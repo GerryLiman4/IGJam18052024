@@ -33,6 +33,9 @@ public class M_BaseMonster : MonoBehaviour
         // initialize all
         healthController.Initialize(factionId);
         attackController.Initialize(factionId);
+
+        // connect all signal
+        healthController.died += onDied;
     }
 
     public void AsyncSwitchControlState(CharacterStateId nextStateId, bool isOverride = false) {
@@ -162,10 +165,16 @@ public class M_BaseMonster : MonoBehaviour
         StartCoroutine(SwitchControlState(CharacterStateId.IDLE));
     }
 
-    public void ExecuteAttack() {
+    public void ExecuteAttack()
+    {
         if (!configuration.information.isMelee) { attackController.SpawnProjectile(); }
+    }
     private void ChangeMovementState(M_CharacterMoveStateId state)
     {
         movementState = state;
+    }
+    private void onDied()
+    {
+        Destroy(gameObject);
     }
 }

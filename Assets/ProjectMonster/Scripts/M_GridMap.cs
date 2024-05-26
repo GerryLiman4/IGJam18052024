@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,26 +13,43 @@ public class M_GridMap : MonoBehaviour
 	private Vector2 cellSize;
 
 	[SerializeField]
-	private GameObject tilePrefab;
+	private M_GridTile tilePrefab;
 
 	public Dictionary<Vector2Int, M_Grid> gridMap;
-	public Dictionary<Vector2Int, GameObject> gridTileMap;
+	public Dictionary<Vector2Int, M_GridTile> gridTileMap;
+
+
+	private Vector2Int currentHoveredGrid = new Vector2Int(-1, -1);
 
 	private void Start()
 	{
 		gridMap = new Dictionary<Vector2Int, M_Grid>();
-		gridTileMap = new Dictionary<Vector2Int, GameObject>();
+		gridTileMap = new Dictionary<Vector2Int, M_GridTile>();
 		for (int i = 0; i < gridSize.x; i++)
 		{
 			for (int j = 0; j < gridSize.y; j++)
 			{
 				Vector2Int pos = new Vector2Int(i, j);
 				gridMap.Add(pos, new M_Grid(pos));
-				
-				GameObject tile = Instantiate(tilePrefab, GetGridWorldPosition(pos), Quaternion.identity);
+
+				M_GridTile tile = Instantiate(tilePrefab, GetGridWorldPosition(pos), Quaternion.identity, transform);
 				gridTileMap.Add(pos, tile);
 			}
 		}
+
+		M_InputManager.Instance.MouseHitGrid += OnMouseHitGrid;
+		M_InputManager.Instance.MouseDoesntHitGrid += OnMouseDoesntHitGrid;
+	}
+
+	public Vector2Int GetGridPositon(Vector3 worldPos)
+	{
+		Vector3 startPos = transform.position;
+		worldPos -= startPos;
+
+		float x = worldPos.x / cellSize.x + 1;
+		float y = worldPos.z / cellSize.y + 1;
+
+		return new Vector2Int((int)x, (int)y);
 	}
 
 	public Vector3 GetGridWorldPosition(Vector2Int gridPos)
@@ -67,4 +85,22 @@ public class M_GridMap : MonoBehaviour
 			}
 		}
 	}
+
+	private void OnMouseHitGrid(Vector3 vector)
+	{
+		Vector2Int gridPos = GetGridPositon(vector);
+		if (currentHoveredGrid == gridPos) return;
+
+		if (currentHoveredGrid != new Vector2Int(-1, -1)) gridTileMap[currentHoveredGrid].SetNormal();
+		currentHoveredGrid = gridPos;
+		gridTileMap[gridPos].SetHovered();
+
+	}
+
+	private void OnMouseDoesntHitGrid()
+	{
+		gridTileMap[currentHoveredGrid].SetNormal();
+		currentHoveredGrid = new Vector2Int(-1, -1);
+	}
+
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -19,7 +20,8 @@ public class M_BaseMonster : MonoBehaviour
 
     private bool isUpdateActive = false;
     private bool isFixedUpdateActive = false;
-        
+
+    private event Action<string> animationFinished;
     private void Start() {
         StartCoroutine(SwitchControlState(initialStateId));
 
@@ -27,7 +29,21 @@ public class M_BaseMonster : MonoBehaviour
         SetUpdateProcess(false);
 
         // initialize all
-        healthController.Initialize();
+        healthController.Initialize(factionId);
+        attackController.Initialize(factionId);
+    }
+
+    public void AsyncSwitchControlState(CharacterStateId nextStateId, bool isOverride = false) {
+        StartCoroutine(SwitchControlState(nextStateId, isOverride));
+    }
+
+    public MonsterId GetMonsterId()
+    {
+        MonsterId monsterId = 0;
+
+        if (configuration != null) monsterId = configuration.id;
+
+        return monsterId;
     }
 
     public IEnumerator SwitchControlState(CharacterStateId nextStateId, bool isOverride = false) 
@@ -50,7 +66,9 @@ public class M_BaseMonster : MonoBehaviour
         switch (currentStateId)
         {
             case CharacterStateId.IDLE:       
-                attackController.CheckEnemy(factionId);
+                M_IDamagable target = attackController.CheckTarget(factionId);
+                // if there is target then switch to attack
+                if (target != null) StartCoroutine(SwitchControlState(CharacterStateId.ATTACK));
                 break;
             case CharacterStateId.ATTACK:
                 break;
@@ -79,13 +97,15 @@ public class M_BaseMonster : MonoBehaviour
         switch (currentStateId)
         {
             case CharacterStateId.IDLE:
-                PlayAnimation("RunFWD");
+                PlayAnimation(AnimationId.Idle.ToString());
 
                 // turn on/off update
                 isUpdateActive = true;
 
                 break;
             case CharacterStateId.ATTACK:
+                animationFinished += onAttackAnimationFinished;
+                PlayAnimation(AnimationId.Attack01.ToString());
                 break;
             default:
                 break;
@@ -101,6 +121,7 @@ public class M_BaseMonster : MonoBehaviour
 
                 break;
             case CharacterStateId.ATTACK:
+                animationFinished -= onAttackAnimationFinished;
                 break;
             default:
                 break;
@@ -112,17 +133,17 @@ public class M_BaseMonster : MonoBehaviour
         isFixedUpdateActive = isActivated;
     }
 
+    // animation
     public void PlayAnimation(string animationName) {
         modelAnimator.Play(animationName);
     }
 
+    public void onAnimationFinished(string animationName) {
+        animationFinished?.Invoke(animationName);
+    }
 
-    public MonsterId GetMonsterId() 
+    private void onAttackAnimationFinished(string animationName)
     {
-        MonsterId monsterId = 0;
-
-        if (configuration != null) monsterId = configuration.id;
-
-        return monsterId;
+        StartCoroutine(SwitchControlState(CharacterStateId.IDLE));
     }
 }

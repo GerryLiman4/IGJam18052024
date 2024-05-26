@@ -5,6 +5,7 @@ public class M_BaseHealth : MonoBehaviour, M_IDamagable
 {
     [SerializeField] public int maxHp = 100;
     [SerializeField] public Collider collider;
+    public FactionId factionId = FactionId.NEUTRAL;
 
     public int currentHp;
 
@@ -23,8 +24,14 @@ public class M_BaseHealth : MonoBehaviour, M_IDamagable
         }
     }
 
-    public void Initialize()
+    public FactionId GetFactionId()
     {
+        return factionId;
+    }
+
+    public void Initialize(FactionId factionId)
+    {
+        this.factionId = factionId;
         collider.enabled = true;
         currentHp = maxHp;
     }

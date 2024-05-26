@@ -272,6 +272,51 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!1 &915063502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 915063504}
+  - component: {fileID: 915063503}
+  m_Layer: 0
+  m_Name: EnemySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &915063503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915063502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f604c980ef4a89d4bbb65373ec6facb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultConfig: {fileID: 11400000, guid: 578bf00e2251b6346bf625efb0946e98, type: 2}
+--- !u!4 &915063504
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915063502}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1024251966
 GameObject:
   m_ObjectHideFlags: 0
@@ -637,6 +682,11 @@ PrefabInstance:
       propertyPath: gridMap
       value: 
       objectReference: {fileID: 84160163}
+    - target: {fileID: 360629710367856699, guid: af871bf39bd068f439c30f4ed6445261,
+        type: 3}
+      propertyPath: preparationTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1783052227689636486, guid: af871bf39bd068f439c30f4ed6445261,
         type: 3}
       propertyPath: m_Name
@@ -707,3 +757,4 @@ SceneRoots:
   - {fileID: 5870300556912348320}
   - {fileID: 1584001812}
   - {fileID: 1024251971}
+  - {fileID: 915063504}

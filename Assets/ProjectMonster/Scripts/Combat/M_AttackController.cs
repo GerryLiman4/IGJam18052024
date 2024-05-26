@@ -9,7 +9,14 @@ public class M_AttackController : MonoBehaviour
     [SerializeField] private LayerMask targetMask;
 
     [SerializeField] public FactionId factionId = FactionId.NEUTRAL;
-    public void SpawnProjectile() { }
+    [SerializeField] public M_BaseProjectile projectilePrefab;
+    [SerializeField] public Transform projectileSpawnRoot;
+
+    public void SpawnProjectile() {
+        if (projectilePrefab == null) { return; }
+
+        Instantiate<M_BaseProjectile>(projectilePrefab, projectileSpawnRoot.transform.position,Quaternion.identity).Initialize(transform.forward, factionId); 
+    }
 
     public void Initialize(FactionId factionId) {
         this.factionId = factionId;

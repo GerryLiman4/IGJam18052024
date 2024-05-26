@@ -146,4 +146,8 @@ public class M_BaseMonster : MonoBehaviour
     {
         StartCoroutine(SwitchControlState(CharacterStateId.IDLE));
     }
+
+    public void ExecuteAttack() {
+        if (!configuration.information.isMelee) { attackController.SpawnProjectile(); }
+    }
 }

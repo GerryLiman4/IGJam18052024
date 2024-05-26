@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7016374331250278016}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 652402706493705655}
   - component: {fileID: 8762174088429592516}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: HpController
   m_TagString: Untagged
   m_Icon: {fileID: 0}

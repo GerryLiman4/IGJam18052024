@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class M_WaveProgressionMonster
+public class M_MonsterIdWithMonsterObject
 {
-    [SerializeField]
-    public int waveProgression = 0;
 
     [SerializeField]
-    public List<MonsterId> monsterIds = new List<MonsterId>();
+    public MonsterId monsterId;
+
+    [SerializeField]
+    public GameObject monsterObj;
 }

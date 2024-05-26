@@ -862,6 +862,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: AttackController
       objectReference: {fileID: 0}
+    - target: {fileID: 2193638692410323990, guid: aed6f8b7fb6da4846bd52e224befc7c9,
+        type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 7208771664040104333, guid: adc05cc0081ba714484a3797ee512091,
+        type: 3}
     - target: {fileID: 6893729545086321930, guid: aed6f8b7fb6da4846bd52e224befc7c9,
         type: 3}
       propertyPath: m_LocalPosition.x

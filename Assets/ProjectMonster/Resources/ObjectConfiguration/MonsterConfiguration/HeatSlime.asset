@@ -18,7 +18,8 @@ MonoBehaviour:
     name: Heat Slime
     description: A slime that is on heat !
     deployCost: 75
-    isMoveable: 0
+    isMoveable: 1
+    moveSpeed: 10
     isMelee: 0
   monsterModel: {fileID: 5615894564105211171, guid: aba0490f08f74e7459ccf4cfaea1880c,
     type: 3}

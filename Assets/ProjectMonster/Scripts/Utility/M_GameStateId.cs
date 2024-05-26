@@ -1,0 +1,7 @@
+public enum M_GameStateId
+{
+	PREPARATION,
+	WAVEPROGRESS,
+	WAVEMAXPROGRESS,
+	GAMEOVER
+}

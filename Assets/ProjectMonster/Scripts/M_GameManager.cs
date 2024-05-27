@@ -34,12 +34,42 @@ public class M_GameManager : MonoBehaviour
 		// initialize every manager
 		slotManager.Initialize(availableMonsters);
 		slotManager.selected += onSelectedCard;
+
+		SignalManager.MouseClickOnGrid += OnSelectGridTile;
 	}
 
+    private void OnSelectGridTile(GameObject gridTile)
+    {
+		if (slotManager.currentSelectedCard == null) return;
+
+		M_GridTile selectedGridTile = gridTile.GetComponentInParent<M_GridTile>();
+
+		if (selectedGridTile == null) return;
+
+		foreach (KeyValuePair<Vector2Int, M_GridTile> loopedGridTile in gridMap.gridTileMap)
+        {
+			if (loopedGridTile.Value == selectedGridTile && loopedGridTile.Value.occupyingObject == null)
+            {
+				;
+				// instantiate monster model
+				loopedGridTile.Value.OccupyTile(gridMap.SpawnAlly(slotManager.currentSelectedCard.configuration.monsterModel.gameObject, loopedGridTile.Key));
+				break;
+            }
+
+		}
+	}
+
+	//private M_BaseMonster SpawnMonsterInTile(M_MonsterConfiguration config, GameObject root)
+ //   {
+	//	M_BaseMonster instantiatedObject = Instantiate<M_BaseMonster>(config.monsterModel, root.transform.position,Quaternion.identity,root.transform);
+
+	//	return instantiatedObject;
+    //}
+
+	// ini gak kepake 
     private void onSelectedCard(M_CardSlotUI selectedCard)
     {
 		print("Selected "+ selectedCard.configuration.information.name);
-        // ini nanti ada input manager dan di input manager ngedetect tile yang akan diletakin 
     }
 
     private void Update()

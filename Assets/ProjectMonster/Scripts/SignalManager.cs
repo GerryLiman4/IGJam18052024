@@ -1,18 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class SignalManager : MonoBehaviour
+public static class SignalManager
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static event Action<GameObject> MouseClickOnGrid;
 
-    // Update is called once per frame
-    void Update()
+    public static void OnMouseClickOnGrid(GameObject gridTile)
     {
-        
+        MouseClickOnGrid?.Invoke(gridTile);
     }
 }

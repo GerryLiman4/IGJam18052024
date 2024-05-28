@@ -11,8 +11,6 @@ public class M_BaseMonster : MonoBehaviour
     [SerializeField] public CharacterStateId currentStateId = CharacterStateId.NONE;
     [SerializeField] public CharacterStateId initialStateId = CharacterStateId.NONE;
 
-    public M_CharacterMoveStateId movementState = M_CharacterMoveStateId.Idle;
-
     [Header("Animator")]
     [SerializeField] public Animator modelAnimator;
 
@@ -36,6 +34,7 @@ public class M_BaseMonster : MonoBehaviour
 
         // connect all signal
         healthController.died += onDied;
+        attackController.Hit += OnHit;
     }
 
     public void AsyncSwitchControlState(CharacterStateId nextStateId, bool isOverride = false) {
@@ -68,14 +67,30 @@ public class M_BaseMonster : MonoBehaviour
     {
         if (!isUpdateActive) return;
 
+        M_IDamagable target = null;
+
         switch (currentStateId)
         {
+            
             case CharacterStateId.IDLE:       
-                M_IDamagable target = attackController.CheckTarget(factionId);
+                target = attackController.CheckTarget(factionId);
                 // if there is target then switch to attack
-                if (target != null) StartCoroutine(SwitchControlState(CharacterStateId.ATTACK));
+                if (target != null)
+                {
+                    StartCoroutine(SwitchControlState(CharacterStateId.ATTACK));
+                }
+                else
+                {
+                    // if there isn't target then switch to moving
+                    StartCoroutine(SwitchControlState(CharacterStateId.MOVE));
+                }
                 break;
             case CharacterStateId.ATTACK:
+                break;
+            case CharacterStateId.MOVE:
+                target = attackController.CheckTarget(factionId);
+
+                if (target != null) StartCoroutine(SwitchControlState(CharacterStateId.ATTACK));
                 break;
             default:
                 break;
@@ -85,10 +100,10 @@ public class M_BaseMonster : MonoBehaviour
     private void FixedUpdate()
     {
 		//switch characterMoveStateId
-		if (movementState == M_CharacterMoveStateId.Moving)
-		{
-			transform.position += transform.forward * configuration.information.moveSpeed * Time.fixedDeltaTime;
-		}
+		//if (movementState == M_CharacterMoveStateId.Moving)
+		//{
+		//	transform.position += transform.forward * configuration.information.moveSpeed * Time.fixedDeltaTime;
+		//}
 
 		if (!isFixedUpdateActive) return;
 
@@ -98,10 +113,12 @@ public class M_BaseMonster : MonoBehaviour
                 break;
             case CharacterStateId.ATTACK:
                 break;
+            case CharacterStateId.MOVE:
+                transform.position += transform.forward * configuration.information.moveSpeed * Time.fixedDeltaTime;
+                break;
             default:
                 break;
         }
-
         
     }
 
@@ -114,16 +131,16 @@ public class M_BaseMonster : MonoBehaviour
 
                 // turn on/off update
                 isUpdateActive = true;
-
-				if (configuration.information.isMoveable)
-				{
-					ChangeMovementState(M_CharacterMoveStateId.Moving);
-				}
 				break;
             case CharacterStateId.ATTACK:
                 animationFinished += onAttackAnimationFinished;
                 PlayAnimation(AnimationId.Attack01.ToString());
-                ChangeMovementState(M_CharacterMoveStateId.Idle);
+                break;
+            case CharacterStateId.MOVE:
+                PlayAnimation(AnimationId.Idle.ToString());
+
+                isFixedUpdateActive = true;
+                isUpdateActive = true;
                 break;
             default:
                 break;
@@ -140,6 +157,14 @@ public class M_BaseMonster : MonoBehaviour
                 break;
             case CharacterStateId.ATTACK:
                 animationFinished -= onAttackAnimationFinished;
+
+                attackController.DisableHitbox();
+                break;
+            case CharacterStateId.MOVE:
+
+                isFixedUpdateActive = false;
+                isUpdateActive = false;
+
                 break;
             default:
                 break;
@@ -167,12 +192,28 @@ public class M_BaseMonster : MonoBehaviour
 
     public void ExecuteAttack()
     {
-        if (!configuration.information.isMelee) { attackController.SpawnProjectile(); }
+        print("execute 1 , ");
+        if (!configuration.information.isMelee) { 
+            attackController.SpawnProjectile(); 
+            return;
+        }
+        else
+        {
+            print("execute 2 , ");
+            attackController.ActivateHitbox();
+        }
     }
-    private void ChangeMovementState(M_CharacterMoveStateId state)
+    private void OnHit(M_IDamagable target)
     {
-        movementState = state;
+        print("Masuk 3 , " + target.GetFactionId());
+        target.GetDamaged(configuration.information.damage, transform.position);
     }
+
+    public void CancelAttack()
+    {
+        attackController.DisableHitbox();
+    }
+
     private void onDied()
     {
         Destroy(gameObject);

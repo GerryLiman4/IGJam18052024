@@ -12,6 +12,7 @@ public class M_MonsterInformation
     [SerializeField] public bool isMoveable = false;
     [SerializeField] public float moveSpeed = 4f;
     [SerializeField] public bool isMelee = false;
+    [SerializeField] public int damage = 10;
 
     public M_MonsterInformation() { }
 

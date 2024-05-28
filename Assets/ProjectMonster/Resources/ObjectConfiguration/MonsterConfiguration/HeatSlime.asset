@@ -20,6 +20,7 @@ MonoBehaviour:
     deployCost: 75
     isMoveable: 1
     moveSpeed: 10
-    isMelee: 0
+    isMelee: 1
+    damage: 15
   monsterModel: {fileID: 5615894564105211171, guid: aba0490f08f74e7459ccf4cfaea1880c,
     type: 3}

@@ -15,6 +15,7 @@ public class M_GameManager : MonoBehaviour
 	[Header("Managers")]
 	[SerializeField] private M_SlotControllerUI slotManager;
 	[SerializeField] private List<M_MonsterConfiguration> availableMonsters = new List<M_MonsterConfiguration>();
+	[SerializeField] private M_BaseHQController playerHQ;
 
 	public M_GameStateId GameState { get; private set; } = M_GameStateId.PREPARATION;
 
@@ -33,9 +34,18 @@ public class M_GameManager : MonoBehaviour
     {
 		// initialize every manager
 		slotManager.Initialize(availableMonsters);
-		slotManager.selected += onSelectedCard;
+		//slotManager.selected += onSelectedCard;
+
+		playerHQ.Initialize();
 
 		SignalManager.MouseClickOnGrid += OnSelectGridTile;
+		SignalManager.BaseDestroyed += OnBaseDestroyed;
+	}
+
+    private void OnBaseDestroyed(FactionId factionId)
+    {
+		ChangeGameState(M_GameStateId.GAMEOVER);
+		SignalManager.OnGameOver(factionId == FactionId.PLAYER);
 	}
 
     private void OnSelectGridTile(GameObject gridTile)
@@ -67,10 +77,10 @@ public class M_GameManager : MonoBehaviour
     //}
 
 	// ini gak kepake 
-    private void onSelectedCard(M_CardSlotUI selectedCard)
-    {
-		print("Selected "+ selectedCard.configuration.information.name);
-    }
+  //  private void onSelectedCard(M_CardSlotUI selectedCard)
+  //  {
+		//print("Selected "+ selectedCard.configuration.information.name);
+  //  }
 
     private void Update()
 	{

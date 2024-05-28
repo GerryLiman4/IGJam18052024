@@ -45,6 +45,7 @@ public class M_GameManager : MonoBehaviour
     private void OnBaseDestroyed(FactionId factionId)
     {
 		ChangeGameState(M_GameStateId.GAMEOVER);
+		SignalManager.OnGameOver(factionId == FactionId.PLAYER);
 	}
 
     private void OnSelectGridTile(GameObject gridTile)

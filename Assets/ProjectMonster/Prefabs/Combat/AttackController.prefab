@@ -49,6 +49,7 @@ MonoBehaviour:
   raycastRadius: 0.5
   raycastRange: 50
   raycastRoot: {fileID: 5615101500969675762}
+  hitboxCollider: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 1048576

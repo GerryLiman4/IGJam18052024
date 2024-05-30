@@ -40,6 +40,7 @@ public class M_GameManager : MonoBehaviour
 
 		SignalManager.MouseClickOnGrid += OnSelectGridTile;
 		SignalManager.BaseDestroyed += OnBaseDestroyed;
+		M_EnemyMonsterSpawner.Instance.WaveEnded += OnWaveEnded;
 	}
 
     private void OnBaseDestroyed(FactionId factionId)
@@ -106,5 +107,11 @@ public class M_GameManager : MonoBehaviour
 	{
 		GameState = gameState;
 		GameStateChanged?.Invoke(gameState);
+	}
+
+	private void OnWaveEnded()
+	{
+		time = 0f;
+		ChangeGameState(M_GameStateId.PREPARATION);
 	}
 }

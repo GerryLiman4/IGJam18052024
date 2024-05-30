@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class M_InputManager : MonoBehaviour
 {
@@ -29,11 +30,19 @@ public class M_InputManager : MonoBehaviour
 		{
 			MouseHitGrid?.Invoke(hitInfo.point);
 			HitGrid = true;
+
+			Mouse mouse = Mouse.current;
+			if (mouse.leftButton.wasPressedThisFrame)
+			{
+				SignalManager.OnMouseClickOnGrid(hitInfo.collider.gameObject);
+			}
 		}
 		else if (HitGrid)
 		{
 			MouseDoesntHitGrid?.Invoke();
 			HitGrid = false;
 		}
+
+		
 	}
 }

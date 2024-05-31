@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,7 +26,16 @@ public class M_EnemyMonsterSpawner : MonoBehaviour
 
 	private int currentMonster = 0;
 
+	private int currentWaveDiedMonster = 0;
 
+	public event Action WaveEnded;
+
+	public static M_EnemyMonsterSpawner Instance;
+
+	private void Awake()
+	{
+		Instance = this;
+	}
 
 	// Start is called before the first frame update
 	void Start()
@@ -74,7 +84,20 @@ public class M_EnemyMonsterSpawner : MonoBehaviour
 
 	private void CheckCurrentWaveMonsterDead()
 	{
-		// check all enemy dead count is equal to monster in wave
+		if (currentWaveDiedMonster >= currentWave.waveProgressionMonsterList.Count)
+		{
+			currentWaveIndex += 1;
+			currentWave = null;
+
+			timer = 0f;
+			waveTargetEndTime = 0f;
+			currentWaveProgression = 0f;
+			currentWaveMaxProgression = false;
+			currentMonster = 0;
+			currentWaveDiedMonster = 0;
+		}
+
+		
 	}
 
 	private void SpawnMonster()
@@ -84,23 +107,32 @@ public class M_EnemyMonsterSpawner : MonoBehaviour
 		MonsterId t = currentWave.GetMonster(currentWaveProgression, currentMonster);
 		if (t != MonsterId.NONE)
 		{
-			GameObject s = null;
+			GameObject spawnedMonster = null;
 			for (int i = 0; i < monsterIdReference.Count; i++)
 			{
 				if (monsterIdReference[i].monsterId == t)
 				{
-					s = monsterIdReference[i].monsterObj;
+					spawnedMonster = monsterIdReference[i].monsterObj;
 					break;
 				}
 			}
 
-			int x = M_GridMap.Instance.GridSize.x - 1;
-			int y = Random.Range(0, M_GridMap.Instance.GridSize.y);
+			M_BaseMonster monster = spawnedMonster.GetComponent<M_BaseMonster>();
 
-			M_GridMap.Instance.SpawnEnemy(s, new Vector2Int(x, y));
+			monster.healthController.died += OnMonsterDied;
+
+			int x = M_GridMap.Instance.GridSize.x - 1;
+			int y = UnityEngine.Random.Range(0, M_GridMap.Instance.GridSize.y);
+
+			M_GridMap.Instance.SpawnEnemy(spawnedMonster, new Vector2Int(x, y));
 
 			currentMonster += 1;
 		}
 
+	}
+
+	private void OnMonsterDied()
+	{
+		currentWaveDiedMonster += 1;
 	}
 }

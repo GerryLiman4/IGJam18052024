@@ -18,6 +18,8 @@ public class M_BaseMonster : MonoBehaviour
     [SerializeField] public M_AttackController attackController;
     [SerializeField] public M_BaseHealth healthController;
 
+    public bool isPlanted = false;
+
     private bool isUpdateActive = false;
     private bool isFixedUpdateActive = false;
 
@@ -28,13 +30,17 @@ public class M_BaseMonster : MonoBehaviour
         // reset all state in this object
         SetUpdateProcess(false);
 
-        // initialize all
-        healthController.Initialize(factionId);
-        attackController.Initialize(factionId);
-
         // connect all signal
         healthController.died += onDied;
         attackController.Hit += OnHit;
+    }
+    
+    public void Initialize(FactionId factionId)
+    {
+        this.factionId = factionId;
+        // initialize all
+        healthController.Initialize(factionId);
+        attackController.Initialize(factionId);
     }
 
     public void AsyncSwitchControlState(CharacterStateId nextStateId, bool isOverride = false) {
@@ -81,8 +87,11 @@ public class M_BaseMonster : MonoBehaviour
                 }
                 else
                 {
-                    // if there isn't target then switch to moving
-                    StartCoroutine(SwitchControlState(CharacterStateId.MOVE));
+                    if (!isPlanted)
+                    {
+                        // if there isn't target then switch to moving
+                        StartCoroutine(SwitchControlState(CharacterStateId.MOVE));
+                    }
                 }
                 break;
             case CharacterStateId.ATTACK:

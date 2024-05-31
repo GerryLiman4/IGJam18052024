@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +16,8 @@ public class M_GameManager : MonoBehaviour
 	[SerializeField] private List<M_MonsterConfiguration> availableMonsters = new List<M_MonsterConfiguration>();
 	[SerializeField] private M_BaseHQController playerHQ;
 
+	[Header("UI")]
+	[SerializeField] private M_NotificationUI notificationUI;
 	public M_GameStateId GameState { get; private set; } = M_GameStateId.PREPARATION;
 
 	private float time = 0f;
@@ -34,14 +35,20 @@ public class M_GameManager : MonoBehaviour
     {
 		// initialize every manager
 		slotManager.Initialize(availableMonsters);
-		//slotManager.selected += onSelectedCard;
+		slotManager.selected += onSelectedCard;
 
 		playerHQ.Initialize();
 
 		SignalManager.MouseClickOnGrid += OnSelectGridTile;
 		SignalManager.BaseDestroyed += OnBaseDestroyed;
 		M_EnemyMonsterSpawner.Instance.WaveEnded += OnWaveEnded;
+		playerHQ.UpdateFoodResourceAmount += OnUpdateFoodResource;
 	}
+
+    private void OnUpdateFoodResource(float total)
+    {
+        // should update ui
+    }
 
     private void OnBaseDestroyed(FactionId factionId)
     {
@@ -61,27 +68,38 @@ public class M_GameManager : MonoBehaviour
         {
 			if (loopedGridTile.Value == selectedGridTile && loopedGridTile.Value.occupyingObject == null)
             {
-				;
+				M_BaseMonster instantiatedAlly = gridMap.SpawnAlly(slotManager.currentSelectedCard.configuration.monsterModel.gameObject, loopedGridTile.Key).GetComponent<M_BaseMonster>();
+				instantiatedAlly.isPlanted = true;
+				instantiatedAlly.Initialize(FactionId.PLAYER);
+				
 				// instantiate monster model
-				loopedGridTile.Value.OccupyTile(gridMap.SpawnAlly(slotManager.currentSelectedCard.configuration.monsterModel.gameObject, loopedGridTile.Key));
+				loopedGridTile.Value.OccupyTile(instantiatedAlly.gameObject);
 				break;
             }
 
 		}
 	}
 
-	//private M_BaseMonster SpawnMonsterInTile(M_MonsterConfiguration config, GameObject root)
- //   {
-	//	M_BaseMonster instantiatedObject = Instantiate<M_BaseMonster>(config.monsterModel, root.transform.position,Quaternion.identity,root.transform);
+    //private M_BaseMonster SpawnMonsterInTile(M_MonsterConfiguration config, GameObject root)
+    //   {
+    //	M_BaseMonster instantiatedObject = Instantiate<M_BaseMonster>(config.monsterModel, root.transform.position,Quaternion.identity,root.transform);
 
-	//	return instantiatedObject;
+    //	return instantiatedObject;
     //}
 
-	// ini gak kepake 
-  //  private void onSelectedCard(M_CardSlotUI selectedCard)
-  //  {
-		//print("Selected "+ selectedCard.configuration.information.name);
-  //  }
+
+    private void onSelectedCard(M_CardSlotUI selectedCard)
+    {
+		print("Here");
+		if (playerHQ == null || playerHQ.currentFoodResource < (float)selectedCard.configuration.information.deployCost)
+        {
+			StartCoroutine(notificationUI.Initialize("NOT ENOUGH RESOURCE", 1.5f));
+
+			return;
+		}
+        print("Selected " + selectedCard.configuration.information.name);
+
+    }
 
     private void Update()
 	{

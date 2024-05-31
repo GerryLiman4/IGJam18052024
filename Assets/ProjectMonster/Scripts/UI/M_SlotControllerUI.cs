@@ -30,9 +30,11 @@ public class M_SlotControllerUI : MonoBehaviour
                 currentSelectedCard = null;
                 return;
             }
+         
         }
 
         currentSelectedCard = selectedCard;
+        selected?.Invoke(selectedCard);
     }
 
     public void ResetCurrentSelected()

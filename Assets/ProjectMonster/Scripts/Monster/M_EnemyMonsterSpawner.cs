@@ -124,8 +124,8 @@ public class M_EnemyMonsterSpawner : MonoBehaviour
 			int x = M_GridMap.Instance.GridSize.x - 1;
 			int y = UnityEngine.Random.Range(0, M_GridMap.Instance.GridSize.y);
 
-			M_GridMap.Instance.SpawnEnemy(spawnedMonster, new Vector2Int(x, y));
-
+			M_BaseMonster spawnEnemy = M_GridMap.Instance.SpawnEnemy(spawnedMonster, new Vector2Int(x, y)).GetComponent<M_BaseMonster>();
+			spawnEnemy.Initialize(FactionId.ENEMY);
 			currentMonster += 1;
 		}
 

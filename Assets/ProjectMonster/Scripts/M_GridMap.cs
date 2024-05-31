@@ -79,9 +79,9 @@ public class M_GridMap : MonoBehaviour
 		GetGrid(gridPos).gridObject = gridObject;
 	}
 
-	public void SpawnEnemy(GameObject gameObject, Vector2Int gridPos)
+	public GameObject SpawnEnemy(GameObject gameObject, Vector2Int gridPos)
 	{
-		Instantiate(gameObject, GetGridWorldPosition(gridPos) + spawnOffset, Quaternion.Euler(new Vector3(0, -90, 0)), transform);
+		return Instantiate(gameObject, GetGridWorldPosition(gridPos) + spawnOffset, Quaternion.Euler(new Vector3(0, -90, 0)), transform);
 	}
 
 	public GameObject SpawnAlly(GameObject gameObject, Vector2Int gridPos)
